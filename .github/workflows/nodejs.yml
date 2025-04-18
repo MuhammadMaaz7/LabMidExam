@@ -1,0 +1,45 @@
+name: Node.js CI
+
+on: push
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v3
+
+          - name: Node.js
+            uses: actions/setup-node@v3
+            with:
+              node-version: '20'
+
+          - run: npm install
+
+          - run: npm run build 
+            
+          - name: Log in to Docker Hub
+            uses: docker/login-action@v2
+            with:
+                username: "muhammadmaaz101"
+                password: "LabExam1234"
+
+          - run: 
+                docker build -t muhammadmaaz101/apigateway:1.0 ./api-gateway
+                docker push muhammadmaaz101/apigateway:1.0
+                
+                docker build -t muhammadmaaz101/customerservices:latest ./customer-services
+                docker push muhammadmaaz101/customerservices:latest
+                
+                docker build -t muhammadmaaz101/inventoryservices:latest ./inventory-services
+                docker push muhammadmaaz101/inventoryservices:latest
+
+                docker build -t muhammadmaaz101/menuservices:latest ./menu-services
+                docker push muhammadmaaz101/menuservices:latest
+
+                docker build -t muhammadmaaz101/orderservices:latest ./order-services
+                docker push muhammadmaaz101/orderservices:latest
+
+                docker build -t muhammadmaaz101/paymentservices:latest ./payment-services
+                docker push muhammadmaaz101/paymentservices:latest
